@@ -1,0 +1,30 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors and IDEs
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies and generated output
+/vendor/
+/node_modules/
+/coverage/
+/.phpunit.cache/
+
+# Logs, temporary files, and local databases
+*.log
+*.tmp
+*.bak
+*.swp
+*.sqlite
+*.sqlite3
+*.db

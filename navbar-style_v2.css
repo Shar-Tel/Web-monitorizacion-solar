@@ -1,0 +1,55 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.navbar {
+  background-color: #40aa70;
+}
+
+.navbar .nav .nav-link {
+  color: white;
+  margin: 0 16px;
+}
+
+.navbar .nav .nav-link:hover {
+  color: #eeee22;
+}
+
+.navbar .nav .nav-link.active {
+  color: #eeee22;
+  margin-bottom: -3px;
+  border-bottom: solid 3px #40aa70;
+}
+
+
+@media only screen and (min-width: 960px) {
+  .navbar .nav .nav-link {
+    padding: 1em 0.7em;
+  }
+  .navbar {
+    padding: 0;
+  }
+  .navbar {
+    padding: 0 0.7em;
+  }
+}
+.navbar .nav .nav-link {
+  position: relative;
+}
+.navbar .nav .nav-link::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-bottom: -3px;
+  background-color: #40aa70;
+  color: transparent;
+  width: 0%;
+  content: '';
+  height: 3px;
+  transition: all 0.5s;
+}
+.navbar .nav .nav-link:hover::after {
+  width: 100%;
+}

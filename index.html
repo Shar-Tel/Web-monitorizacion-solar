@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Plantas Solares</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="jquery.md5.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="config.js"></script>
+</head>
+<body>
+
+<section class="bg-alt">
+    <div class="container">
+        <h2 class="text-center pb-2"></h2>
+        <div class="row h-100">
+            <div class="col-12">
+                <div class="card h-100 shadow-sm mx-auto col-6">
+						<img src="portada_web_2017.png" style="width: 100%;" alt="Plantas Solares" data-app-nombre>
+                    <div class="card-body text-center my-auto">
+                        <h1>Login</h1>
+			<div class="toast mx-auto" data-delay=2000>
+					  <div class="toast-header">
+					  Login incorrecto
+					  </div>
+					  <div class="toast-body">
+						Revise usuario y password
+					  </div>
+					</div>
+                     <!--   <form id="formLogin" role="form">-->
+                            <div class="form-group row">
+                                <label for="inputLoginFor" class="sr-only control-label">usuario</label>
+                                <div class="col-sm-8 mx-auto">
+                                    <input type="text" class="form-control" id="inputUserForm" placeholder="usuario" required="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputPasswordForm" class="sr-only control-label">Password</label>
+                                <div class="col-sm-8 mx-auto">
+                                    <input type="password" class="form-control" id="inputPasswordForm" placeholder="password" required="">
+                                </div>
+                            </div>
+                            <div class="form-group row justify-content-center">
+                                <div class="col-sm-8 p-b-3 p-t-2">
+                                    <button type="submit" id="submit" class="btn btn-outline-secondary btn-lg btn-block">Entrar</button>
+                                </div>
+                            </div>
+                   <!--     </form>-->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+</body>
+</html>
+
+
+<script>
+function entrar() {
+  var usuario = $("#inputUserForm").val().trim();
+  var password = $.MD5($("#inputPasswordForm").val().trim());
+
+  if (usuario === "" || password === "") {
+    $('.toast').toast('show');
+    return;
+  }
+
+  $.ajax({
+    url: "login.php",
+    method: "POST",
+    dataType: "json",
+    data: { usuario: usuario, password: password }
+  }).done(function (data) {
+    if (data > 0) {
+      sessionStorage.setItem("usuario", data);
+      window.location = "principal.html";
+    } else {
+      $('.toast').toast('show');
+    }
+  }).fail(function () {
+    $('.toast').toast('show');
+  });
+}
+
+$("#submit").click(entrar);
+
+$("#inputUserForm, #inputPasswordForm").keypress(function (e) {
+  if (e.which === 13) {
+    e.preventDefault();
+    entrar();
+  }
+});
+</script>

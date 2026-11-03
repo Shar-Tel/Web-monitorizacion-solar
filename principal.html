@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Plantas Solares</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./navbar-style_v2.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ <!-- <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <!--<script src="https://unpkg.com/feather-icons@4.10.0/dist/feather.min.js"></script>-->
+   <script src="feather.min.js"></script>
+ <!-- <script src="Chart.js"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js"></script>
+<script src="bootstrap-datepicker.es.js" charset="UTF-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+<script src="jquery.table2excel.js"></script>
+
+</head>
+<body>
+<div class="row justify-content-center">
+ <a href="./principal.html">
+  <img src="logo_mantenimiento_v2.png" alt="Plantas Solares" data-app-nombre>
+  </a>
+</div>
+
+<nav class="navbar navbar-expand-sm bg-success justify-content-center">
+<!-- <ul  id="tabsprincipal" class="nav"> -->
+<ul  id="tabsprincipal" class="nav nav-tabs2 mx-auto mb-0 pb-0">
+  <li class="nav-item">
+    <a class="nav-link text-light"  data-toggle="tab"  href="#informes">Informes</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active text-light"  data-toggle="tab" href="#general">General</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-light"  data-toggle="tab"  href="#inverters">Inverters</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-light"  data-toggle="tab"  href="#contadores">Contadores</a>
+  </li>
+     <li class="nav-item">
+    <a class="nav-link text-light"  data-toggle="tab"  href="#instantContadores">Lecturas instantáneas</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-light"  data-toggle="tab"  href="#alarmas">Alarmas</a>
+  </li>
+
+  
+
+</ul>
+</nav>
+<div class="container-fluid">
+	<div class="row">
+
+	<!--PÁGINA PRINCIPAL-->   
+	   <div class="container col-md-12 ml-sm-auto col-lg-12 pt-3 px-4 pt-5 mt-5" style="padding-top: 0rem!important; margin-top: 1rem!important;">
+
+	
+		<div class="tab-content">	
+		<!-- Desplegable para elegir la planta -->
+		<select class="selectpicker" id="desplegablePlantas">
+		  </select>
+				<div class="row"><br></div>	
+			<table id="tablaPrincipalResumen"  data-toggle="table" class="table table-striped table-sm mb-5">
+						<thead>
+						    <tr>
+							    <th colspan="3"></th>
+								<th colspan="2" class="text-center">Inverters</th>
+								<th colspan="2" class="text-center">Contadores</th>
+								</tr>
+							<tr>
+								<th data-field="nombre">Nombre</th>
+								<th data-field="PAC" class="text-center">KW</th>
+								<th data-field="KDY" class="text-center">KW/h</th>
+								<th data-field="num_inverters" class="text-center">Totales</th>
+								<th data-field="fallos" class="text-center">Fallo</th>
+								<th data-field="num_contadores" class="text-center">Totales</th>
+								<th data-field="fallos_contadores" class="text-center">Fallo</th>
+								<th data-field="planta" data-visible="false">Planta</th>
+							</tr>
+						</thead>
+					</table>	
+				<!--<div class="row"><br></div>	-->
+				
+		<!--TAB INFORMES-->		
+		  <div class="tab-pane container" id="informes">
+			 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+				<h1 class="h2" id="tituloInformes"></h1>
+			</div>	
+			<div class="row float-right mb-2">
+				<div class="btn-group" id="desplegableLineasInformes">
+					  <button type="button" id="btnAnteriorLineaInformes" class="btn btn-light fa fa-caret-left mr-1 ml-4"></button>
+					  <select class="selectpicker informes" id="lineasInformes">
+						<option value="0">plantas</option>
+					  </select>
+					  <button type="button" id="btnPosteriorLineaInformes" class="btn btn-light fa fa-caret-right ml-1 mr-3"></button>
+				</div>
+				<button type="button" id="btnInformesExportar" class="btn btn-basic fa fa-file-text ml-3 mr-3"></button>
+						
+				<div class="btn-group float-right">
+				  <button type="button" id="btnAnteriorFechaInformes" class="btn btn-light fa fa-caret-left mr-1"></button>
+				  <input id="datepickerInformes" data-date-end-date="+1d" width="276" /><span class="fa fa-calendar input-group-text end_date_calendar" aria-hidden="true "></span>
+					<script>
+						$('#datepickerInformes').datepicker({ format: 'mm/yyyy',todayHighlight:true, startView:1,minViewMode:1, immediateUpdates:true, updateViewDate:true, todayBtn:'linked', weekStart:1, language: 'es-ES'});
+						$('#datepickerInformes').datepicker()
+								.on('changeDate', function(e) {	
+								
+									dibujaGraficas();
+
+									// `e` here contains the extra attributes
+								})
+					</script>
+				   <button type="button" id="btnPosteriorFechaInformes" class="btn btn-light fa fa-caret-right ml-1"></button>
+				</div> 
+				<select class="selectpicker informes" id="invertersInformes" multiple>
+					<option value="0">inverters</option>
+				  </select>
+				<select class="selectpicker diaomes" id="diasMesInformes">
+						<option value="0"  selected="selected">d/d</option>
+						<option value="1">Mes</option>
+					  </select>
+				
+				</div>
+				<div class="row col-10">
+				<div class="btn-group">
+					<button type="button" id="btnEnergiaInformes" class="btn btn-outline-dark">Energía</button>
+				<!--	<button type="button" id="btnPerformanceInformes" class="btn btn-outline-dark mr-5">Performance ratio</button>-->
+				</div>
+			</div>
+			<canvas class="my-4" id="chartInformes" width="900" height="380"></canvas>
+
+			<table id="tablaInformesEnergia"  data-toggle="table" class="table table-striped table-sm mb-5">
+						<thead>
+							<tr>
+								<th data-field="planta">Nombre</th>
+								<th data-field="fecha">Fecha</th>
+								<th data-field="KDY">Acumulado (KWh)</th>
+								<th data-field="rendimiento">Rendimiento</th>
+							</tr>
+						</thead>
+					</table>	
+				<div class="row"><br></div>					
+		  </div>
+		<!--TAB GENERAL-->
+		  <div class="tab-pane active container-fluid" id="general">	
+				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center col-lg-12 pb-2 mb-3 border-bottom">
+					<h1 class="h2" id="tituloGeneral"></h1>
+				</div>
+
+				<canvas class="my-4" id="chartPotenciaInverterHoy" width="900" height="225"></canvas>
+				
+				<div class="card">
+				  <div class="card-body" id="CuadroFallosCOM"></div>
+				</div>
+				
+				<table id="tablaGeneralInstantaneos"  data-toggle="table" class="table table-striped table-sm -mb-5">
+						<thead>
+							<tr>
+								<th data-field="nombre">Nombre</th>
+								<th data-field="PAC">Potencia actual (KW)</th>
+								<th data-field="KDY">Acumulado diario (KWh)</th>
+								<th data-field="KMT">Acumulado mensual (KWh)</th>
+								<th data-field="rendimiento">Rendimiento</th>
+								<th data-field="ratio">Ratio</th>
+								<th data-field="fecha">Hora</th>
+							</tr>
+						</thead>
+					</table>
+					
+
+		<!--		<canvas class="my-4" id="chartEnergiaHoy" width="900" height="380"></canvas> -->
+				
+
+			   
+			</div>
+		<!--TAB DE INVERTERS-->
+			<div class="tab-pane container-fluid" id="inverters">  
+				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center col-lg-12 pb-2 mb-3 border-bottom">
+						<h1 class="h2" id="tituloInverters"></h1>
+				</div>		
+				<div class="row">
+						<!--	<button type="button" id="btnPlanta" class="btn btn-primary mr-2">Planta</button>
+							<button type="button" id="btnInverter" class="btn btn-primary mr-5">Inverter</button>-->
+							<button type="button" id="btnInvertersExportar" class="btn btn-basic fa fa-file-text ml-3 mr-3"></button>
+							<div class="btn-group float-right">
+						      <button type="button" id="btnAnteriorFechaInverters" class="btn btn-light fa fa-caret-left mr-1"></button>
+							  <input id="datepickerInverters" width="276" /><span class="fa fa-calendar input-group-text end_date_calendar" aria-hidden="true "></span>
+								<script>
+									$('#datepickerInverters').datepicker({ format: 'dd/mm/yyyy',todayHighlight:true, multidate: true,  todayBtn:'linked', weekStart:1, language: 'es-ES'});
+									$('#datepickerInverters').datepicker()
+											.on('hide', function(e) {
+											dibujaGraficas();
+											rellenaTablaInvertersAgregada();
+											rellenaTablaInvertersDato();
+												// `e` here contains the extra attributes
+											});
+								</script>
+							   <button type="button" id="btnPosteriorFechaInverters" class="btn btn-light fa fa-caret-right ml-1"></button>
+							</div> 
+						<select class="selectpicker inverter" id="desplegableInverterInformes">
+							<option value="PAC"  selected="selected">Potencia AC</option>
+							<option value="KDY">Energía diaria</option>
+							<option value="IL1">Corriente Ica L1</option>
+							<option value="IL2">Corriente Ica L2</option>
+							<option value="IL3">Corriente Ica L3</option>
+							<option value="IDC">Corriente Icc</option>
+							<option value="TKK">Temp. unidad potencia 1</option>
+							<option value="UL1">Tensión Uca L1</option>
+							<option value="UL2">Tensión Uca L2</option>
+							<option value="UL3">Tensión Uca L3</option>
+							<option value="UDC">Tensión Ucc</option>
+							<option value="UGD">Tensión Ugnd</option>
+							<option value="RAD">Radiación solar</option>
+							<option value="VIE">Velocidad del viento</option>
+					  </select>
+							<div class="btn-group" id="desplegableInvertersInverters">
+						<!--		  <button type="button" id="btnAnteriorInverterDatos" class="btn btn-light fa fa-caret-left mr-1 ml-4"></button> -->
+								  <select class="selectpicker inverters" id="invertersInverters" multiple>
+									<option value="0">inverters</option>
+								  </select>
+						<!--	  <button type="button" id="btnPosteriorInverterDatos" class="btn btn-light fa fa-caret-right ml-1 mr-3"></button> -->
+							</div>
+						</div>
+										<div class="row col-10">
+
+			</div>
+			<div class="row">
+				<canvas class="col-12" id="chartPotenciaInverters" width="1500" height="500"></canvas>
+				</div>
+				<div class="card">
+				  <div class="card-body" id="RadiacionMensual"></div>
+				</div>
+					
+<div class="row">
+				<div class="col-12">
+				<h2 class="sub-header">Plantas<button data-toggle="collapse" data-target="#tablaInvertersAgregada" class="float-right btn btn-primary">Mostrar/Ocultar tabla multi</button></h2>
+				  <div class="table-responsive">
+					<table id="tablaInvertersAgregada"  data-toggle="table" class="table table-striped">
+						<thead>
+							<tr>
+								<th data-field="inverter">Nombre</th>
+								<th data-field="fecha">Fecha</th>
+								<th data-field="PAC">Pot AC</th>
+								<th data-field="KDY">KW/h</th>
+								<th data-field="IL1">ICA L1</th>
+								<th data-field="IL2">ICA L2</th>
+								<th data-field="IL3">ICA L3</th>
+								<th data-field="UL1">UCA L1</th>
+								<th data-field="UL2">UCA L2</th>
+								<th data-field="UL3">UCA L3</th>
+								<th data-field="UDC">UCC</th>
+								<th data-field="UGD">UGND</th>
+							</tr>
+						</thead>
+					</table>	
+					
+					<table id="tablaInvertersRAD"  data-toggle="table" class="table table-striped table-sm pb-5">
+						<thead>
+							<tr>
+								<th data-field="inverter">Nombre</th>
+								<th data-field="fecha">Fecha</th>
+								<th data-field="radiacion">Acumulado diario (KWh)</th>
+								<th data-field="temperatura">Grados</th>								
+							</tr>
+						</thead>
+					</table>	
+
+					<table id="tablaInvertersDato"  data-toggle="table" class="table table-striped table-sm pb-5">
+						<thead>
+							<tr>
+								<th data-field="planta">Planta</th>
+								<th data-field="linea">CT</th>
+								<th data-field="inverter">Inverter</th>
+								<th data-field="nombre">Nombre</th>
+								<th data-field="hora">Fecha</th>
+								<th data-field="valor">Valor</th>							
+							</tr>
+						</thead>
+					</table>
+					          </div>
+</div>
+
+</div>
+								
+				<div class="row"><br></div>
+			</div>
+
+
+
+       <!--TAB DE CONTADORES-->
+			<div class="tab-pane container-fluid" id="contadores">  
+				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center col-lg-12 pb-2 mb-3 border-bottom">
+						<h1 class="h2" id="tituloContadores"></h1>
+				</div>		
+				<div class="row">
+						<!--	<button type="button" id="btnPlanta" class="btn btn-primary mr-2">Planta</button>
+							<button type="button" id="btnInverter" class="btn btn-primary mr-5">Inverter</button>-->
+							<button type="button" id="btnContadoresExportar" class="btn btn-basic fa fa-file-text ml-3 mr-3"><br>Sumado</button>
+							<button type="button" id="btnContadoresHorasExportar" class="btn btn-basic fa fa-file-text ml-3 mr-3"><br>Horas</button>
+							<div class="btn-group float-right">
+						      <button type="button" id="btnAnteriorFechaContadores" class="btn btn-light fa fa-caret-left mr-1"></button>
+							  <input id="datepickerContadores" width="276" /><span class="fa fa-calendar input-group-text end_date_calendar" aria-hidden="true "></span>
+								<script>
+									$('#datepickerContadores').datepicker({ format: 'dd/mm/yyyy',todayHighlight:true, multidate: true, todayBtn:'linked', weekStart:1, language: 'es-ES'});
+									$('#datepickerContadores').datepicker()
+											.on('hide', function(e) {
+											dibujaGraficas();
+											rellenaTablaContadoresContadores();
+											rellenaTablaContadoresContadoresHoras();
+												// `e` here contains the extra attributes
+											});
+								</script>
+							   <button type="button" id="btnPosteriorFechaContadores" class="btn btn-light fa fa-caret-right ml-1"></button>
+							</div> 
+															 &nbsp; &nbsp;
+						<div class="btn-group" id="desplegableContadoresContadores">
+								  <select class="selectpicker contadores" id="contadoresContadores" multiple>
+									<option value="0">contadores</option>
+								  </select>
+							</div>
+
+						</div>
+										<div class="row col-10">
+
+			</div>
+			<div class="row">
+				<canvas class="col-12" id="chartContadorContadores" width="1500" height="500"></canvas>
+				</div>
+				<div class="card">
+				  <div class="card-body" id="RadiacionMensual"></div>
+				</div>
+				<!---Esta de momento no la uso -->
+
+	
+
+				<div class="col-12">
+				<h2 class="sub-header">Contadores</h2>
+				  <div class="table-responsive">
+					<table id="tablaContadoresContadores"  data-toggle="table" class="table table-striped">
+						<thead>
+							<tr>
+								<th data-field="Nombre">Nombre</th>
+								<th data-field="Activa_I">Activa I</th>
+								<th data-field="Activa_E">Activa E</th>
+								<th data-field="Reactiva_Q1">R Q1</th>
+								<th data-field="Reactiva_Q2">R Q2</th>
+								<th data-field="Reactiva_Q3">R Q3</th>
+								<th data-field="Reactiva_Q4">R Q4</th>
+								<th data-field="Heq">Heq</th>
+								<th data-field="PMax">PMax</th>
+								<th data-field="desviacion">% desv</th>		
+								<th data-field="PR">% PR</th>								
+
+							<!--	<th data-field="KMT">Acumulado mensual (KWh)</th> -->
+							</tr>
+						</thead>
+					</table>	
+					</div>
+					</div>
+					<br><br>
+				<div class="col-12">
+				<h2 class="sub-header">Contadores por horas</h2>
+				  <div class="table-responsive">
+					<table id="tablaContadoresContadoresHoras"  data-toggle="table" class="table table-striped">
+						<thead>
+							<tr>
+								<th data-field="Planta">Planta</th>
+								<th data-field="Nombre">Nombre</th>
+								<th data-field="Fecha">Fecha</th>
+								<th data-field="Hora">Hora</th>
+								<th data-field="Activa_I">Activa I</th>
+								<th data-field="Activa_E">Activa E</th>
+								<th data-field="Reactiva_Q1">R Q1</th>
+								<th data-field="Reactiva_Q2">R Q2</th>
+								<th data-field="Reactiva_Q3">R Q3</th>
+								<th data-field="Reactiva_Q4">R Q4</th>
+
+							<!--	<th data-field="KMT">Acumulado mensual (KWh)</th> -->
+							</tr>
+						</thead>
+					</table>	
+					</div>
+					</div>
+
+							
+			<div class="row"><br></div>
+</div>
+            
+			
+		 <!--TAB DE LECTURAS INSTANTANEAS DE CONTADORES-->
+			<div class="tab-pane container-fluid" id="instantContadores">  
+				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center col-lg-12 pb-2 mb-3 border-bottom">
+						<h1 class="h2" id="tituloInstant"></h1>
+				</div>		
+				<div class="row col-12">
+							<div class="btn-group col-8" id="desplegableLecturaContadores">
+						<!--		  <button type="button" id="btnAnteriorInverterDatos" class="btn btn-light fa fa-caret-left mr-1 ml-4"></button> -->
+								  <select class="selectpicker col-8" id="lecturaContadores">
+									<option value="0">contadores</option>
+								  </select>
+						<!--	  <button type="button" id="btnPosteriorInverterDatos" class="btn btn-light fa fa-caret-right ml-1 mr-3"></button> -->
+								<button type="button" class="btn btn-primary ml-3 mr-3 col-1" id="btnPedirLecturaInstant">Lectura</button>
+							</div>
+						</div>
+										<div class="row col-10">
+
+			</div>
+<br>
+				<div class="card">
+				 <div class="card-body" id="lecturaInstant">
+</div>
+				</div>
+
+							
+			<div class="row"><br></div>
+</div>			
+            
+		<!--Esto es el tab de ALARMAS-->		
+		  <div class="tab-pane container" id="alarmas">
+				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+				<h1 class="h2" id="tituloAlarmas">Alarmas</h1>
+			</div>	
+			<div class="row float-right mb-2">
+			<!--	<div class="btn-group" id="desplegableLineasInformes">
+					  <button type="button" id="btnAnteriorLineaInformes" class="btn btn-light fa fa-caret-left mr-1 ml-4"></button>
+					  <select class="selectpicker informes" id="lineasInformes">
+						<option value="0">plantas</option>
+					  </select>
+					  <button type="button" id="btnPosteriorLineaInformes" class="btn btn-light fa fa-caret-right ml-1 mr-3"></button>
+				</div>-->
+				<button type="button" id="btnAlarmasExportar" class="btn btn-basic fa fa-file-text ml-3 mr-3"></button>
+						
+				<div class="btn-group float-right">
+				  <button type="button" id="btnAnteriorFechaAlarmas" class="btn btn-light fa fa-caret-left mr-1"></button>
+				<input id="datepickerAlarmas" width="276" /><span class="fa fa-calendar input-group-text end_date_calendar" aria-hidden="true "></span>
+								<script>
+									$('#datepickerAlarmas').datepicker({ format: 'dd/mm/yyyy',todayHighlight:true, todayBtn:'linked', weekStart:1, language: 'es-ES'});
+									$('#datepickerAlarmas').datepicker()
+											.on('changeDate', function(e) {
+											dibujaGraficas();
+												// `e` here contains the extra attributes
+											});
+								</script>
+				   <button type="button" id="btnPosteriorFechaAlarmas" class="btn btn-light fa fa-caret-right ml-1"></button>
+				</div> 
+				</div>
+			<table id="tablaAlarmas"  data-toggle="table" class="table table-striped table-sm mb-5">
+						<thead>
+							<tr>
+								<th data-field="id" data-visible="false">id</th>
+								<th data-field="planta">Planta</th>
+								<th data-field="linea">Linea</th>
+								<th data-field="inverter">Inverter</th>
+								<th data-field="nombre">Nombre</th>
+								<th data-field="alarma">Alarma</th>
+								<th data-field="fecha_inicio">Fecha inicio</th>
+								<th data-field="fecha_fin">Fecha fin</th>
+							</tr>
+						</thead>
+					</table>	
+				<div class="row"><br></div>				
+		  </div>
+		</div>		
+	   </div>
+	</div>
+</div>
+</body>
+</html>
+
+
+
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script src="config.js"></script>
+<script src="informes.js"></script>
+<script src="general.js"></script>
+<script src="inverters.js"></script>
+<script src="contadoresIntervalo2.js"></script>
+<script src="alarmas.js"></script>
+<script src="funciones.js"></script>
+<script src="instantaneo.js"></script>
