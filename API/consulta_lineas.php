@@ -2,25 +2,24 @@
 
 require_once __DIR__ . '/auth.php';
 
-include('database_connection.php');
+require_once __DIR__ . '/database_connection.php';
 
 
 $planta = param_texto('planta');
 
 $conn = conectar();
-$sql="SELECT  distinct linea FROM datalogger.inverters where planta='".$planta."' order by linea;";
-
-
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // output data of each row
-    while($linea = $result->fetch_assoc()) {			
-	$arr1[]=array("linea"=>$linea["linea"],
-				   );
-				   }
-} else {
-    echo "0 results";
+$arr1 = array();
+$stmt = $conn->prepare('SELECT DISTINCT linea FROM datalogger.inverters WHERE planta = ? ORDER BY linea');
+if ($stmt) {
+    $stmt->bind_param('s', $planta);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result && $result->num_rows > 0) {
+        while ($linea = $result->fetch_assoc()) {
+            $arr1[] = array("linea" => $linea["linea"]);
+        }
+    }
+    $stmt->close();
 }
-$conn->close(); 
-echo '' .json_encode($arr1).'';
+$conn->close();
+echo json_encode($arr1);

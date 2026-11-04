@@ -43,7 +43,18 @@ if (session_status() === PHP_SESSION_NONE) {
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 header('Referrer-Policy: strict-origin-when-cross-origin');
-header('Cache-Control: no-store, max-age=0');
+header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+// CSP básico (ajustar si se usan orígenes externos)
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'");
+// HSTS solo si hay HTTPS
+$httpsSeg = (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')
+    || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
+if ($httpsSeg) {
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+}
 
 /**
  * Devuelve una respuesta de error JSON y termina la ejecución.

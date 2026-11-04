@@ -5,6 +5,7 @@
  * - Consulta preparada (sin inyección SQL).
  * - Guarda el usuario en la sesión del servidor.
  * - Compatible con contraseñas MD5 antiguas y con password_hash() moderno.
+ * - Migra hashes MD5 a password_hash() al iniciar sesión correctamente.
  */
 
 require_once __DIR__ . '/API/seguridad.php';
@@ -18,7 +19,7 @@ if (!isset($_SERVER['REQUEST_METHOD']) || strtoupper($_SERVER['REQUEST_METHOD'])
 }
 
 $login = isset($_POST['usuario']) ? trim((string) $_POST['usuario']) : '';
-$password = isset($_POST['password']) ? trim((string) $_POST['password']) : '';
+$password = isset($_POST['password']) ? (string) $_POST['password'] : '';
 
 if ($login === '' || $password === '' || strlen($login) > 100 || strlen($password) > 255) {
     echo '0';
@@ -71,16 +72,24 @@ if (method_exists($stmt, 'get_result')) {
 }
 
 $stmt->close();
-$conn->close();
 
 $correcto = false;
+$esMd5 = false;
 if ($fila) {
     $guardado = (string) $fila['password'];
-    if (preg_match('/^\$2[aby]\$/', $guardado)) {
+    if (preg_match('/^\$2[aby]\$/', $guardado) || preg_match('/^\$argon2/i', $guardado)) {
         $correcto = password_verify($password, $guardado);
     } else {
         // Compatibilidad con las contraseñas MD5 ya existentes en la BD.
-        $correcto = hash_equals(strtolower($guardado), strtolower($password));
+        $esMd5 = true;
+        $passwordMd5 = strtolower(md5($password));
+        $guardadoCmp = strtolower($guardado);
+        // También permitir comparación directa por si el hash está guardado tal cual
+        if (strlen($guardadoCmp) === 32) {
+            $correcto = hash_equals($guardadoCmp, $passwordMd5);
+        } else {
+            $correcto = hash_equals($guardadoCmp, $passwordMd5);
+        }
     }
 }
 
@@ -88,9 +97,27 @@ if ($correcto) {
     unset($_SESSION['login_intentos'], $_SESSION['login_bloqueo']);
     session_regenerate_id(true);
     $_SESSION['usuario'] = (string) $fila['idusuarios'];
+
+    // Migrar contraseñas MD5 a bcrypt/Argon2 de forma transparente
+    if ($esMd5) {
+        $nuevoHash = password_hash($password, PASSWORD_DEFAULT);
+        if ($nuevoHash !== false) {
+            $stmtUp = $conn->prepare('UPDATE usuarios SET password = ? WHERE idusuarios = ?');
+            if ($stmtUp) {
+                $idUsr = (int) $fila['idusuarios'];
+                $stmtUp->bind_param('si', $nuevoHash, $idUsr);
+                $stmtUp->execute();
+                $stmtUp->close();
+            }
+        }
+    }
+
+    $conn->close();
     echo (string) $fila['idusuarios'];
     exit;
 }
+
+$conn->close();
 
 $intentos++;
 $_SESSION['login_intentos'] = $intentos;
