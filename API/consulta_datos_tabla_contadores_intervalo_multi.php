@@ -45,17 +45,9 @@ $inicioSQL="select round(sum(sumadia),3) as suma from (";
 $finSQL=") as d";
 $sql="";
 
-//Tengo que cambiar la planta para algunos casos porque la RAD es compartida
-switch ($planta) {
-    case "Leyva":
-        $plantaRAD="Mazarron";
-        break;
-    case "Granja-Villarreal":
-        $plantaRAD="Villarreal";
-        break;
-    default:
+
 		$plantaRAD=$planta;
-}
+
 
 //Hacer un for con todos los meses que vaya añadiendo consultas con UNION
 foreach ($resultado as $fecha)

@@ -39,17 +39,8 @@ $fechaIcorta=substr($fechaI,0,7);
 $fechaFcorta=substr($fechaF,0,7);
 $resultado = obtenerMesesEntreFechas($fechaIcorta, $fechaFcorta);
 
-//Tengo que cambiar la planta para algunos casos porque la RAD es compartida
-switch ($planta) {
-    case "Leyva":
-        $plantaRAD="Mazarron";
-        break;
-    case "Granja-Villarreal":
-        $plantaRAD="Villarreal";
-        break;
-    default:
-		$plantaRAD=$planta;
-}
+$plantaRAD=$planta;
+
 
 
 //Monto el SQL, que pueden ser varios SELECT con UNION

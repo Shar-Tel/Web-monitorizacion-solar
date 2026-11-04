@@ -55,17 +55,9 @@ if ($result->num_rows > 0) {
 //ESTA CONSULTA SE GASTA EN LA TABLA DE LA PÁGINA DE DATOS AL ELEGIR LA RADIACIÓN DIARIA
 //**************************************************************************************
 
-//Tengo que cambiar la planta para algunos casos porque la RAD es compartida
-switch ($planta) {
-    case "Leyva":
-        $plantaRAD="Mazarron";
-        break;
-    case "Granja-Villarreal":
-        $plantaRAD="Villarreal";
-        break;
-    default:
+
 		$plantaRAD=$planta;
-}
+
 
 //Monto el SQL, que pueden ser varios SELECT con UNION
 $inicioSQL="select planta, radiacion,temp, nombre_general, hora from (";

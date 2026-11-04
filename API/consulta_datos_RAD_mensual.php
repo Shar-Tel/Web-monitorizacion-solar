@@ -13,17 +13,9 @@ $BD="datalogger".$anyo.$mes;
 //ESTA CONSULTA SACA LA SUMA DE LAS MEDIAS DIARIAS DE RADIACIÓN
 //**************************************************************************************
 
-//Tengo que cambiar la planta para algunos casos porque la RAD es compartida
-switch ($planta) {
-    case "Leyva":
-        $plantaRAD="Mazarron";
-        break;
-    case "Granja-Villarreal":
-        $plantaRAD="Villarreal";
-        break;
-    default:
+
 		$plantaRAD=$planta;
-}
+
 
 $conn = conectar();
 
